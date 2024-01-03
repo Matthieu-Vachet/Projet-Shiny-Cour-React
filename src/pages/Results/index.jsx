@@ -5,6 +5,15 @@ import colors from '../../utils/style/colors'
 import { useFetch, useTheme } from '../../utils/hooks'
 import { StyledLink, Loader } from '../../utils/style/Atoms'
 
+// Test
+
+export function formatJobList(title, listLength, index) {
+  if (index === listLength - 1) {
+      return title
+  }
+  return `${title},`
+}
+
 const ResultsContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -83,7 +92,7 @@ function Results() {
     </LoaderWrapper>
   ) : (
     <ResultsContainer theme={theme}>
-      <ResultsTitle theme={theme}>
+      {/* <ResultsTitle theme={theme}>
         Les compétences dont vous avez besoin :
         {resultsData &&
           resultsData.map((result, index) => (
@@ -93,6 +102,16 @@ function Results() {
             >
               {result.title}
               {index === resultsData.length - 1 ? '' : ','}
+            </JobTitle> */}
+            <ResultsTitle theme={theme}>
+    Les compétences dont vous avez besoin :
+    {resultsData &&
+        resultsData.map((result, index) => (
+            <JobTitle
+                key={`result-title-${index}-${result.title}`}
+                theme={theme}
+            >
+                {formatJobList(result.title, resultsData.length, index)}
             </JobTitle>
           ))}
       </ResultsTitle>
