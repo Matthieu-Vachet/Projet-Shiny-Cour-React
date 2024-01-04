@@ -5,15 +5,6 @@ import colors from '../../utils/style/colors'
 import { useFetch, useTheme } from '../../utils/hooks'
 import { StyledLink, Loader } from '../../utils/style/Atoms'
 
-// Test
-
-export function formatJobList(title, listLength, index) {
-  if (index === listLength - 1) {
-      return title
-  }
-  return `${title},`
-}
-
 const ResultsContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -61,7 +52,7 @@ const LoaderWrapper = styled.div`
   justify-content: center;
 `
 
-function formatFetchParams(answers) {
+export function formatQueryParams(answers) {
   const answerNumbers = Object.keys(answers)
 
   return answerNumbers.reduce((previousParams, answerNumber, index) => {
@@ -71,13 +62,21 @@ function formatFetchParams(answers) {
   }, '')
 }
 
+export function formatJobList(title, listLength, index) {
+  if (index === listLength - 1) {
+    return title
+  } else {
+    return `${title},`
+  }
+}
+
 function Results() {
   const { theme } = useTheme()
   const { answers } = useContext(SurveyContext)
-  const fetchParams = formatFetchParams(answers)
+  const queryParams = formatQueryParams(answers)
 
   const { data, isLoading, error } = useFetch(
-    `http://localhost:8000/results?${fetchParams}`
+    `http://localhost:8000/results?${queryParams}`
   )
 
   if (error) {
@@ -92,7 +91,7 @@ function Results() {
     </LoaderWrapper>
   ) : (
     <ResultsContainer theme={theme}>
-      {/* <ResultsTitle theme={theme}>
+      <ResultsTitle theme={theme}>
         Les compétences dont vous avez besoin :
         {resultsData &&
           resultsData.map((result, index) => (
@@ -100,18 +99,7 @@ function Results() {
               key={`result-title-${index}-${result.title}`}
               theme={theme}
             >
-              {result.title}
-              {index === resultsData.length - 1 ? '' : ','}
-            </JobTitle> */}
-            <ResultsTitle theme={theme}>
-    Les compétences dont vous avez besoin :
-    {resultsData &&
-        resultsData.map((result, index) => (
-            <JobTitle
-                key={`result-title-${index}-${result.title}`}
-                theme={theme}
-            >
-                {formatJobList(result.title, resultsData.length, index)}
+              {formatJobList(result.title, resultsData.length, index)}
             </JobTitle>
           ))}
       </ResultsTitle>
